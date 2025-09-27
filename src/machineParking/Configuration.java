@@ -42,6 +42,12 @@ public class Configuration {
         parking.put(cvb.getIdTicket(),cvb);
     }
 
+    public String obtainKindOdVehicle(String id){
+       TypesVecilhes ty =  parking.get(id);
+       String typeVehicle = ty.getType();
+       return typeVehicle;
+    }
+
 
 
 

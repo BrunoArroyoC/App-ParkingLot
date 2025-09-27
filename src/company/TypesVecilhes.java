@@ -61,10 +61,15 @@ public abstract class TypesVecilhes {
 
     @Override
     public String toString() {
-        return "TypesVecilhes{" +
-                "plate='" + plate + '\'' +
-                ", stratTime='" + this.current + '\'' +
-                '}';
+
+        String mensaje = """
+                === Parking ===
+                Plate= %s
+                Current= %s
+                idTicket= %s
+                """.formatted(this.plate,this.current,this.idTicket );
+
+        return mensaje;
     }
 
     public String getPlate() {
@@ -82,6 +87,9 @@ public abstract class TypesVecilhes {
     public void setStratTime(Date current) {
         this.current = current;
     }
+
+
+    public abstract String getType();
 }
 
 

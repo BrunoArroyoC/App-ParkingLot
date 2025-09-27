@@ -2,7 +2,7 @@ package company;
 
 import java.util.Date;
 
-public class Bike extends TypesVecilhes{
+public class Bike extends TypesVecilhes implements ParkingCosts{
 
 
     public Bike(String plate) {
@@ -47,5 +47,19 @@ public class Bike extends TypesVecilhes{
     @Override
     public void setStratTime(Date current) {
         super.setStratTime(current);
+    }
+
+    @Override
+    public String getIdTicket() {
+        return super.getIdTicket();
+    }
+
+    public double getCostPerHour(){
+        return COST_PER_HOUR_BIKE;
+    }
+
+    @Override
+    public String getType() {
+        return "BIKE";
     }
 }

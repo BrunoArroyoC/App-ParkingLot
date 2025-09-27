@@ -2,7 +2,7 @@ package company;
 
 import java.util.Date;
 
-public class Van extends TypesVecilhes{
+public class Van extends TypesVecilhes implements ParkingCosts{
 
 
     public Van(String plate) {
@@ -47,5 +47,19 @@ public class Van extends TypesVecilhes{
     @Override
     public String generateIdTicket() {
         return super.generateIdTicket();
+    }
+
+    @Override
+    public String getIdTicket() {
+        return super.getIdTicket();
+    }
+
+    public double getCostPerHour(){
+        return COST_PER_HOUR_VAN;
+    }
+
+    @Override
+    public String getType() {
+        return "VAN";
     }
 }

@@ -1,8 +1,5 @@
 package client;
-import company.Bike;
-import company.Car;
-import company.TypesVecilhes;
-import company.Van;
+import company.*;
 import machineParking.Configuration;
 
 import java.io.BufferedReader;
@@ -15,7 +12,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MenuMachine {
+public class MenuMachine implements ParkingCosts{
     final Scanner sc;
     Configuration config;
 
@@ -34,10 +31,10 @@ public class MenuMachine {
                     2. Out
                     \n""");
             System.out.print("Select the desire option: ");
-            int op = sc.nextInt();
+            option = sc.nextInt();
             sc.nextLine();
 
-            switch (op){
+            switch (option){
                 case 1 -> {
                     String numberPlate = askPlate();
                     String typeVehicles = askType();
@@ -70,6 +67,26 @@ public class MenuMachine {
                     String curretTime = currentTime();
                     int currentHours = currentHours(curretTime);
                     int currentMinutes = currentMinutes(curretTime);
+
+                    String idAux = extractIdOfTicket(nameTicketOut);
+                    String typeVehicle = this.config.obtainKindOdVehicle(idAux);
+
+                    if(typeVehicle.equals("CAR")){
+                        double resultTarifCar = operationByHours(currentHours, hours);
+                        resultTarifCar *= COST_PER_HOUR_CAR;
+                        methodPay(resultTarifCar);
+                    } else if (typeVehicle.equals("VAN")) {
+                        double resultTarifVan = operationByHours(currentHours,hours);
+                        resultTarifVan *= COST_PER_HOUR_VAN;
+                        methodPay(resultTarifVan);
+                    }else if(typeVehicle.equals("BIKE")){
+                        double resultTarifBike = operationByHours(currentHours,hours);
+                        resultTarifBike *= COST_PER_HOUR_BIKE;
+                        methodPay(resultTarifBike);
+                    }else{
+                        System.out.println("ERROR");
+                        break;
+                    }
 
                 }
 
@@ -118,16 +135,33 @@ public class MenuMachine {
         this.config.generateStartTicket(id);
     }
 
+    public String extractIdOfTicket(String nameTicket){
+        String id = "";
+        Pattern pattern = Pattern.compile("idTicket= [^ ]");
+        try(BufferedReader br = new BufferedReader(new FileReader(nameTicket))){
+            String line;
+            while((line = br.readLine())!= null){
+                Matcher m = pattern.matcher(line);
+                if(m.find()){
+                    id = m.group(1);
+                }
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return id;
+    }
+
 
     public String extractTimeOfTicket(String nameTicket){
         String time = "";
-        Pattern pattern = Pattern.compile("stratTime='([01]?\\d|2[0-3]):[0-5]\\d'");
+        Pattern pattern = Pattern.compile("current= (\\d{2}):(\\d{2})");
         try(BufferedReader br = new BufferedReader((new FileReader(nameTicket)))){
             String lines;
             while((lines = br.readLine()) != null){
                 Matcher m = pattern.matcher(lines);
                 if(m.find()){
-                    time = m.group(1);
+                    time = m.group(1) + ":" + m.group(2);
                 }
             }
         }catch (IOException e){
@@ -151,7 +185,6 @@ public class MenuMachine {
         return auxTicketName;
     }
 
-    //12:23
 
     public int castHours(String time){
         int hours;
@@ -187,6 +220,60 @@ public class MenuMachine {
         minutesCurrent = Integer.parseInt(minutesString);
         return minutesCurrent;
     }
+
+    public double operationByHours(int a, int b){
+        double result = b - a;
+        return result;
+    }
+
+    public void askForPay(double total){
+        System.out.println("Your total is: " + total);
+
+    }
+
+    public void methodPay(double resultTarif){
+        while(true) {
+            System.out.print("Would you like pay with card o cash? (CARD/CASH): ");
+            String method = sc.nextLine().toUpperCase().trim();
+            if(method.isEmpty()){
+                System.out.println("You have to write (CARD/CASH)");
+                continue;
+            }else if(method.equals("CARD")){
+                askInformationCard();
+            }else if(method.equals("CASH")){
+                System.out.println("You total is: " + resultTarif);
+            }else{
+                System.out.println("Wrong Option type (CARD/CASH)");
+            }
+        }
+    }
+
+    public void askInformationCard(){
+        String name;
+        do {
+            System.out.print("Type your full name: ");
+            name = sc.nextLine();
+        }while(name.isEmpty());
+
+        String numberCard;
+        do {
+            System.out.print("Type your number card. It has to be 16 digits: ");
+            numberCard = sc.nextLine();
+        } while (numberCard.length()!=16);
+
+        String date;
+        do{
+            System.out.print("Type the expiration date (mm/yy): ");
+            date = sc.nextLine();
+        }while(!date.isEmpty());
+
+        System.out.println("Thank you for choose us as you trust parking");
+
+    }
+
+
+
+
 
 
 
