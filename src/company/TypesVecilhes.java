@@ -1,5 +1,7 @@
 package company;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Random;
@@ -61,13 +63,14 @@ public abstract class TypesVecilhes {
 
     @Override
     public String toString() {
-
+        DateFormat df = new SimpleDateFormat("HH:mm");
+        String hhmm = df.format(this.current);
         String mensaje = """
                 === Parking ===
                 Plate= %s
                 Current= %s
                 idTicket= %s
-                """.formatted(this.plate,this.current,this.idTicket );
+                """.formatted(this.plate,hhmm,this.idTicket );
 
         return mensaje;
     }

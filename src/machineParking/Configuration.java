@@ -14,22 +14,39 @@ public class Configuration {
     public Configuration(){
         parking = new HashMap<>();
     }
-
+    /*
     public String getTicketName(){
         StringBuilder sb = new StringBuilder();
-        int contador = 0;
-        for(int i = 1; i>contador; i++){
-            sb.append("Ticket_").append(contador).append(".txt");
-            contador++;
+        for(int i = 0; true; i++){
+            sb.append("Ticket_").append(i).append(".txt");
+            i++;
             break;
         }
         return sb.toString();
     }
 
+     */
 
+    public void generateStartTicket(String id) {
+        TypesVecilhes v = parking.get(id);
+        if (v == null) {
+            System.err.println("No existe vehículo con id " + id);
+            return;
+        }
+        String fileName = "Ticket_" + id + ".txt"; // <- clave
 
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName, false))) {
+            bw.write("=== Ticket ===");
+            bw.newLine();
+            bw.write(v.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
     public void generateStartTicket(String id){
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(getTicketName(),true))){
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(getTicketName(),false))){
             bw.write("=== Tciket ===");
             bw.newLine();
             bw.write(parking.get(id).toString());
@@ -37,6 +54,8 @@ public class Configuration {
             e.printStackTrace();
         }
     }
+
+     */
 
     public void addVehicles(TypesVecilhes cvb){
         parking.put(cvb.getIdTicket(),cvb);

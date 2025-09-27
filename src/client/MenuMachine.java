@@ -137,7 +137,7 @@ public class MenuMachine implements ParkingCosts{
 
     public String extractIdOfTicket(String nameTicket){
         String id = "";
-        Pattern pattern = Pattern.compile("idTicket= [^ ]");
+        Pattern pattern = Pattern.compile("idTicket=\\s*(\\d+).*");
         try(BufferedReader br = new BufferedReader(new FileReader(nameTicket))){
             String line;
             while((line = br.readLine())!= null){
@@ -155,7 +155,7 @@ public class MenuMachine implements ParkingCosts{
 
     public String extractTimeOfTicket(String nameTicket){
         String time = "";
-        Pattern pattern = Pattern.compile("current= (\\d{2}):(\\d{2})");
+        Pattern pattern = Pattern.compile("Current= (\\d{2}):(\\d{2})");
         try(BufferedReader br = new BufferedReader((new FileReader(nameTicket)))){
             String lines;
             while((lines = br.readLine()) != null){
@@ -240,8 +240,10 @@ public class MenuMachine implements ParkingCosts{
                 continue;
             }else if(method.equals("CARD")){
                 askInformationCard();
+                break;
             }else if(method.equals("CASH")){
                 System.out.println("You total is: " + resultTarif);
+                break;
             }else{
                 System.out.println("Wrong Option type (CARD/CASH)");
             }
@@ -265,7 +267,7 @@ public class MenuMachine implements ParkingCosts{
         do{
             System.out.print("Type the expiration date (mm/yy): ");
             date = sc.nextLine();
-        }while(!date.isEmpty());
+        }while(!date.isEmpty() || date.length() != 5);
 
         System.out.println("Thank you for choose us as you trust parking");
 
